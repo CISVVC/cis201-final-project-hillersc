@@ -16,7 +16,7 @@ public:
     bool is_punct(char c);
     void eat_whitespace(std::ifstream &input);
     void eat_punct(std::ifstream &input);
-    std::string next_word(std::string word);
+    std::string next_word(std::ifstream &input);
     void print();
 private:
     std::vector<Word> m_word_stats;

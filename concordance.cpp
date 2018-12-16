@@ -13,11 +13,11 @@ void Concordance::parse()
     while(!file.eof())
     {
         std::string word = next_word(file);
-        add_word(word, m_line);
+        new_word(word, m_line);
     }
 }
 
-std::string Concordance::new_word(std::string word, int line)
+void Concordance::new_word(std::string word, int line)
 {
     int index = -1;
     for(int i = 0; i < m_word_stats.size(); ++i)
@@ -33,11 +33,9 @@ std::string Concordance::new_word(std::string word, int line)
         Word ward(word);
         ward.add_line(line);
         m_word_stats.push_back(ward);
-    } else 
-    {
+    } else {
         m_word_stats[index].add_count(1);
         m_word_stats[index].add_line(line);
-        
     }
 }
 
@@ -81,13 +79,13 @@ void Concordance::eat_punct(std::ifstream &input)
             break;
         if(!is_punct(c))
         {
-            input.put_back(c);
+            input.putback(c);
             break;
         }
     }
 }
 
-std::string Concordance::next_word(std::string word)
+std::string Concordance::next_word(std::ifstream &input)
 {
     std::string word;
     for(;;)
@@ -116,6 +114,6 @@ void Concordance::print()
     for (int i = 0; i < m_word_stats.size(); ++i) 
     {
         m_word_stats[i].print();
-        std::cout << endl;
+        std::cout << std::endl;
     }
 }
