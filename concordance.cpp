@@ -1,8 +1,10 @@
 #include "concordance.h"
+#include <iostream>
 
 Concordance::Concordance(std::string filename)
 {
     m_filename = filename;
+    m_line = 1;
 }
 
 void Concordance::parse()
@@ -11,21 +13,65 @@ void Concordance::parse()
     while(!file.eof())
     {
         std::string word = next_word(file);
+        add_word(word, m_line);
+    }
+}
 
-        // implement the rest of this function
-        // This is just to see the words as they are printed out.
-        // The word may have some puncuation attached to it, this
-        // will be ok for this example.
-        std::cout << word << std::endl;
+std::string Concordance::new_word(std::string word, int line)
+{
+    int index = -1;
+    for(int i = 0; i < m_word_stats.size(); ++i)
+    {
+        if(m_word_stats[i].get_word() == word)
+        {
+            index = i;
+            break;
+        }
+    }
+    if(index == -1)
+    {
+        Word ward(word);
+        ward.add_line(line);
+        m_word_stats.push_back(ward);
+    } else 
+    {
+        m_word_stats[index].add_count(1);
+        m_word_stats[index].add_line(line);
+        
     }
 }
 
 bool Concordance::is_whitespace(char c)
 {
-  return (c == ' ' || c == '\n' ||  c == '\t');
+    return (c == ' ' || c == '\n' || c == '\t');
+}
+
+bool Concordance::is_punct(char c)
+{
+    return (c == '.' || c == ',' || c == '?' || c == '!' || c == '\'' || c== '\"' || c == ';' || c == ':' || c == ')' || c == '(');
 }
 
 void Concordance::eat_whitespace(std::ifstream& input)
+{
+     for(;;)
+    {
+        char c;
+        input.get(c);
+        if(input.eof()) {
+            break;
+        }
+
+        if(!is_whitespace(c))
+        {
+            input.putback(c); // this will put the character back on the input stream
+            break;
+        }
+        if(c == '\n')
+            m_line++;
+    }
+}
+
+void Concordance::eat_punct(std::ifstream &input)
 {
     for(;;)
     {
@@ -33,26 +79,28 @@ void Concordance::eat_whitespace(std::ifstream& input)
         input.get(c);
         if(input.eof())
             break;
-        if(!is_whitespace(c))
+        if(!is_punct(c))
         {
-            input.putback(c); // this will put the character back on the input stream
+            input.put_back(c);
             break;
         }
     }
 }
 
-std::string Concordance::next_word(std::ifstream& input)
+std::string Concordance::next_word(std::string word)
 {
     std::string word;
     for(;;)
     {
         char c;
         input.get(c);
-        if(input.eof())
-            break;
-        if(!is_whitespace(c))
+        if (input.eof()) 
         {
-            word += c;
+            break;
+        }
+        if(!is_whitespace(c) && !is_punct(c))
+        {
+            word += tolower(c);
         }
         else
         {
@@ -63,12 +111,11 @@ std::string Concordance::next_word(std::ifstream& input)
     return word;
 }
 
-int Concordance::find_word(std::string word)
-{
-    // search the Word vector, and return the index in the vector.
-}
-
 void Concordance::print()
 {
-    // print out the concordance
+    for (int i = 0; i < m_word_stats.size(); ++i) 
+    {
+        m_word_stats[i].print();
+        std::cout << endl;
+    }
 }

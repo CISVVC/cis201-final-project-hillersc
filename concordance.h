@@ -11,14 +11,17 @@ class Concordance
 public:
     Concordance(std::string filename);
     void parse();
-    std::string next_word(std::ifstream &input);
+    void new_word(std::string word, int line);
     bool is_whitespace(char c);
+    bool is_punct(char c);
     void eat_whitespace(std::ifstream &input);
-    int find_word(std::string word);
+    void eat_punct(std::ifstream &input);
+    std::string next_word(std::string word);
     void print();
 private:
     std::vector<Word> m_word_stats;
     std::string m_filename;
+    int m_line;
 };
 
 #endif
