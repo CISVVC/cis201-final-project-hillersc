@@ -1,19 +1,19 @@
+# http://pirate.shu.edu/~minimair/assembler/Makefile
 #
 all: main
 
+word.o : word.cpp
+	@g++ -c word.cpp
 
-main : main.cpp
-	@g++ -o main -std=c++11 main.cpp 
+concordance.o : concordance.cpp
+	@g++ -c concordance.cpp
 
-run : main
-	@echo "Running the program:"
+main : word.o concordance.o main.cpp
+	@g++ -o main word.o concordance.o main.cpp
+
+run :  main
 	@./main
 
-edit:
-	@vim main.cpp
-
-debug:
-	@gdb ./main
 
 clean :
-	@rm main
+	@rm *.o  main
