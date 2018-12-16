@@ -1,3 +1,11 @@
+/*
+File: concordance.h
+Description: interface for concordance.cpp 
+Author: Colby Hillers
+Email: hillersc144964@student.vvc.edu
+Date: 12/16/18
+*/
+
 #ifndef CONCORDANCE_H
 #define CONCORDANCE_H
 #include "word.h"

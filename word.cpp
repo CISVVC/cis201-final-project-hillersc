@@ -1,3 +1,11 @@
+/*
+File: word.cpp
+Description: implementation file for word.h
+Author: Colby Hillers
+Email: hillersc144964@student.vvc.edu
+Date: 12/16/18
+*/
+
 #include "word.h"
 
 Word::Word(std::string  word)
